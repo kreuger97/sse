@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<script>
+let eventSource;
+
+function start() {
+
+  eventSource = new EventSource('sse');
+
+  eventSource.onopen = function() {
+    console.log("event: open");
+  };
+
+  eventSource.addEventListener('error', function(event) {
+    console.log(`event: error [readyState=${this.readyState}]`);
+  });
+
+  eventSource.addEventListener('bye', function(event) {
+    console.log("event: bye");
+    logElem.innerHTML += event.data + "<br>";
+  });
+
+  eventSource.addEventListener('message', function(event) {
+    console.log("event: message");
+    data.innerHTML = event.data;
+  });
+
+}
+
+function stop() {
+  eventSource.close();
+  console.log("connection close");
+}
+
+</script>
+
+<button onclick="start()">connecting</button>
+<br>
+<button onclick="stop()">close</button>
+<br>
+<div id="data" style="margin: 6px 0"></div>
